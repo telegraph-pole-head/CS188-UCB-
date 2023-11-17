@@ -71,7 +71,7 @@ graph TB
 ### Search Problems
 
 - **search problems** consist of
-  - state space ("model of the world")
+  - state space ("model of the world") (state space size)
   - successor function (action & cost)
   - start state and goal test
 - **solution**: a sequence of actions (a plan) that transforms the start state into a goal state.

@@ -43,7 +43,7 @@ function EXPAND(problem, node) yields nodes
 **All these search algorithms are the same except for fringe strategies**
 
 ## Uninformed Search Methods
-When we *have no knowledge of the location of goal states in our search tree*, we are forced to select our strategy for tree search from one of the techniques that falls under the umbrella of uninformed search.
+When we *have no knowledge of the location of goal states in our search tree*, we are forced to select our strategy for tree search from one of the techniques that fall under the umbrella of uninformed search.
 
 Search Properties:
 - **completeness**: there *exists* a solution to the search problem, is the strategy guaranteed to find it given infinite computational resources?
@@ -51,11 +51,12 @@ Search Properties:
 - **branching factor** `b`: the increase in the number of nodes on the frontier each time a frontier node is dequeued and replaced with its children is O(b). At depth k in the search tree, there exist $O(b^k)$ nodes.
 - **the maximum depth** `m` (could be infinite when there's a loop in the state space graph)
 - the depth of the shallowest solution `s`
-- **Time complexity**: The time complexity of an algorithm quantifies the amount of time taken by an algorithm to run as a function of the length of the input. \[ref](https://www.geeksforgeeks.org/time-complexity-and-space-complexity/) 
-- **Space complexity**: Problem-solving using a computer requires memory to hold temporary data or final result while the program is in execution.
+- **Time complexity**: The time complexity of an algorithm quantifies the amount of time taken by an algorithm to run as a function of the length of the input.
+- **Space complexity**: Problem-solving using a computer requires memory to hold temporary data or final result while the program is in execution.[\ref](https://www.geeksforgeeks.org/time-complexity-and-space-complexity/) 
 
 ### Depth-First Search
-| completeness | optimality | time complexity | space complexcity |
+[visual](https://visualgo.net/en/dfsbfs)
+| completeness | optimality | time complexity | space complexity |
 |--------------|------------|-----------------|-------------------|
 | only if `m` is finite, so only if we prevent cycle | No, it finds the leftmost solution | $O(b^m)$ | $O(b \cdot m)$ |
 
@@ -92,11 +93,11 @@ graph TD
 | yes (`s` must be finite as long as solution exists) | Only if all **cost**s are 1 | $O(b^s)$ | $O(b^s)$ |
 > `s` is the depth of the solution
 
-- BFS outperform DFS:
-  - knowing soltions are shallow
+- BFS outperforms DFS:
+  - knowing that solutions are shallow
   - there're cycles
-- DFS outperform BFS:
-  - knowing soltions are deep
+- DFS outperforms BFS:
+  - knowing that solutions are deep
   - solution close to the LHS(or RHS, just search from right)
   - storage limited
 

@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 import random
 
+all_subjects = ["a", "b", "c", "d", "e", "f", "g"]
+
 
 @dataclass
 class Feature:
@@ -62,3 +64,29 @@ class Meme:
         cred1_ = self.feature.credibility
         cred2_ = meme.feature.credibility
         return cred1_/(cred1_ + cred2_)
+
+    def diverse_meme(self, div: float):
+        """Generate a diverse variant of the meme
+
+        Args: 
+            div (float): Diversity factor 
+        Returns:
+            Meme: A diverse variant of the meme
+        """
+        new_content = div*random.random()*self.content
+        new_strength = div * random.random() * self.feature.strength
+        new_credibility = div * random.random() * self.feature.credibility
+        new_desirability = div * random.random() * self.feature.desirability
+        new_recency = div * random.random() * self.feature.recency
+
+        return Meme(
+            nation=self.nation,
+            subject=self.subject,
+            content=int(new_content),
+            feature=Feature(
+                strength=new_strength,
+                credibility=new_credibility,
+                desirability=new_desirability,
+                recency=new_recency
+            )
+        )

@@ -32,10 +32,10 @@ class Individual:
     location: np.Point
     personality: Personality
 
-    def __init__(self, location, original_memes=None, personality=Personality()):
-        if original_memes is None:
-            original_memes = []
-        self.memes = original_memes
+    def __init__(self, location, memes=None, personality=Personality()):
+        if memes is None:
+            memes = []
+        self.memes = memes
         self.location = location
         self.personality = personality
 
@@ -110,3 +110,29 @@ class Individual:
         close = 1 - np.sqrt(dis/size)
         if random.random() < poss:
             other.learn_meme(choose_meme(), close)
+
+    def diverse_individual(self, location, div: float) -> Individual:
+        """Generate a variant individual with random perturbations.
+
+        Args:
+            location: the new location
+            div (float): Diversity factor   
+
+        Returns:
+            Individual: Variant individual with random location, personality   
+                    and meme impression values scaled by div.
+        """
+        new_personality = Personality(
+            inclusive=div * random.random() * self.personality.inclusive,
+            talkable=div * random.random() * self.personality.talkable,
+            capacity=int(div * random.random() * self.personality.capacity)
+        )
+
+        new_memes = [(meme.diverse_meme(div), div * random.random() * imp)
+                     for meme, imp in self.memes]
+
+        return Individual(
+            location=location,
+            memes=new_memes,
+            personality=new_personality
+        )

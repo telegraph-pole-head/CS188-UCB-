@@ -2,7 +2,7 @@
 
 ## AI -> Computational Rationality
 
-Being rational means **maximizing your expected rationality**
+Being rational means **maximizing your expected utility**
 
 for brains:
 

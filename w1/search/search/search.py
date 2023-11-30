@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -19,9 +19,10 @@ Pacman agents (in searchAgents.py).
 
 import util
 
+
 class SearchProblem:
     """
-    This class outlines the structure of a search problem, but doesn't implement
+    This class outlines the prio_que of a search problem, but doesn't implement
     any of the methods (in object-oriented terminology: an abstract class).
 
     You do not need to change anything in this class, ever.
@@ -68,9 +69,39 @@ def tinyMazeSearch(problem):
     sequence of moves will be incorrect, so only use this for tinyMaze.
     """
     from game import Directions
+
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
+
+class Node:
+    """Node"""
+
+    def __init__(self, state, path: list = None, priority=0):
+        self.state = state
+        self.path = path
+        self.priority = priority
+
+
+def graphSearch(problem: SearchProblem, prio_que, heu=None) -> list:
+    reached = set()
+    start = problem.getStartState()
+    prio_que.push(Node(start, []))
+    while not prio_que.isEmpty():
+        node = prio_que.pop()
+        if problem.isGoalState(node.state):
+            return node.path
+        for successor in problem.getSuccessors(node.state):
+            succ_location = successor[0]
+            succ_direction = successor[1]
+            # succ_priority = successor[2]
+            if node not in reached:
+                reached.add(node)
+                if isinstance(prio_que, util.Stack) or isinstance(prio_que, util.Queue):
+                    prio_que.push(Node(succ_location, node.path + [succ_direction]))
+    return []
+
 
 def depthFirstSearch(problem: SearchProblem):
     """
@@ -86,18 +117,21 @@ def depthFirstSearch(problem: SearchProblem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    graphSearch(problem, util.Stack())
+    # util.raiseNotDefined()
+
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
+
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -105,6 +139,7 @@ def nullHeuristic(state, problem=None):
     goal in the provided SearchProblem.  This heuristic is trivial.
     """
     return 0
+
 
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""

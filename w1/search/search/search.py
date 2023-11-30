@@ -80,26 +80,45 @@ class Node:
 
     def __init__(self, state, path: list = None, priority=0):
         self.state = state
-        self.path = path
+        if path is None:
+            self.path = []
+        else:
+            self.path = path
         self.priority = priority
 
 
-def graphSearch(problem: SearchProblem, prio_que, heu=None) -> list:
+def graphSearch(problem: SearchProblem, prio_que, calc_heu=None, heu=None) -> list:
     reached = set()
     start = problem.getStartState()
-    prio_que.push(Node(start, []))
+    if isinstance(prio_que, (util.Stack, util.Queue)):
+        prio_que.push(Node(start))
+    else:
+        prio_que.push(Node(start), 0)
     while not prio_que.isEmpty():
         node = prio_que.pop()
+        if node.state not in reached:
+            reached.add(node.state)
+        else:
+            continue
         if problem.isGoalState(node.state):
             return node.path
         for successor in problem.getSuccessors(node.state):
             succ_location = successor[0]
             succ_direction = successor[1]
-            # succ_priority = successor[2]
-            if node not in reached:
-                reached.add(node)
-                if isinstance(prio_que, util.Stack) or isinstance(prio_que, util.Queue):
+            succ_priority = successor[2]
+            if succ_location not in reached:
+                if isinstance(prio_que, (util.Stack, util.Queue)):
                     prio_que.push(Node(succ_location, node.path + [succ_direction]))
+                else:
+                    n_heu = calc_heu(problem, successor, node, heu)
+                    prio_que.push(
+                        Node(
+                            succ_location,
+                            node.path + [succ_direction],
+                            node.priority + succ_priority,
+                        ),
+                        n_heu,
+                    )
     return []
 
 
@@ -117,20 +136,20 @@ def depthFirstSearch(problem: SearchProblem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    graphSearch(problem, util.Stack())
+    return graphSearch(problem, util.Stack())
     # util.raiseNotDefined()
 
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return graphSearch(problem, util.Queue())
+    # util.raiseNotDefined()
 
 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return graphSearch(problem, util.PriorityQueue(), ucs_heuristic)
+    # util.raiseNotDefined()
 
 
 def nullHeuristic(state, problem=None):
@@ -141,10 +160,18 @@ def nullHeuristic(state, problem=None):
     return 0
 
 
+def ucs_heuristic(problem, successor, node, heuristic):
+    return successor[2] + node.priority
+
+
+def astar_heuristic(problem, successor, node, heuristic):
+    return successor[2] + node.priority + heuristic(successor[0], problem)
+
+
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    return graphSearch(problem, util.PriorityQueue(), astar_heuristic, heuristic)
+    # util.raiseNotDefined()
 
 
 # Abbreviations
